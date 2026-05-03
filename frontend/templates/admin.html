@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>Chat History</h2>
+    
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>Bot</th>
+        </tr>
+        
+        {% for chat in chats %}
+        <tr>
+            <td>{{ chat.user_message }}</td>
+            <td>{{ chat.bot_response }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
