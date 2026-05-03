@@ -5,8 +5,16 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<div class="chat-container">
+<div class="login-container" id="login-container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="login-message"></p>
+</div>
+<div class="chat-container" id="chat-container" style="display:none;">
     <h2>College Chatbot</h2>
+    <button onclick="logout()">Logout</button>
     <div id="chat-box"></div>
     <input type="text" id="user-input" placeholder="Type your message..." />
     <button onclick="sendMessage()">Send</button>

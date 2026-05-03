@@ -2,18 +2,21 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import openai
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_bcrypt import Bcrypt
+import os
 
-openai.api_key = "YOUR_API_KEY"  # Replace with your actual OpenAI API key
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Set your OpenAI API key in environment variables
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
-app.secret_key = 'your_secret_key'  # Change this to a random secret key
+app.secret_key = os.getenv("SECRET_KEY", "default_secret_key")  # Change this to a random secret key
 
 # Database config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chatbot.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -95,11 +98,18 @@ def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
 
-    if user and user.password == data['password']:
+    if user and bcrypt.check_password_hash(user.password, data['password']):
         login_user(user)
         return jsonify({"message": "Login successful", "role": user.role})
     
     return jsonify({"message": "Invalid credentials"})
+
+# Logout route
+@app.route("/logout", methods=["POST"])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message": "Logged out successfully"})
 
 # Get chat history
 @app.route("/history", methods=["GET"])
@@ -117,7 +127,5 @@ def admin():
     chats = ChatHistory.query.all()
     return render_template("admin.html", chats=chats)
 
-import os
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True)
