@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ChatBot_AI
 
 ## Overview
@@ -97,3 +98,6 @@ Tables:
 ## License
 
 This project is provided under the terms of the included `LICENSE` file.
+=======
+# ChatBot-Ai
+>>>>>>> 1ae1fd3bf1e08946be4c8ac3858e23ecf76f403a
